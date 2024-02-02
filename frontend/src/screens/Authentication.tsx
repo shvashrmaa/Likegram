@@ -1,7 +1,32 @@
-import { useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { userRegister, userLogin } from "../Redux/AuthSlice";
+import { useNavigate } from "react-router-dom";
+import { RootState } from "../Redux/store";
 
 const Authentication = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [Action, setAction] = useState<string>("Register");
+
+  const [userName, setuserName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const onRegisterButtonClick = (
+    e: MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    dispatch(userRegister({ userName, email, password }));
+  };
+
+  const onloginButtonClick = (
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  ) => {
+    e.preventDefault();
+    dispatch(userLogin({ email, password }));
+  };
 
   return (
     <div className="h-full border-2 shadow-md flex flex-col items-center justify-center w-[30%] gap-12">
@@ -25,6 +50,7 @@ const Authentication = () => {
           required
           placeholder="email"
           className="outline-none border-2 shadow-sm font-bold px-4 py-2 rounded-md  focus:border-purple-400"
+          onChange={(e) => setEmail(e.target.value)}
         />
         {Action === "Register" && (
           <input
@@ -32,6 +58,7 @@ const Authentication = () => {
             required
             placeholder="username"
             className="outline-none border-2 shadow-sm font-bold px-4 py-2 rounded-md  focus:border-purple-400"
+            onChange={(e) => setuserName(e.target.value)}
           />
         )}
         <input
@@ -39,13 +66,20 @@ const Authentication = () => {
           required
           placeholder="password"
           className="outline-none border-2 shadow-sm font-bold px-4 py-2 rounded-md  focus:border-purple-400"
+          onChange={(e) => setPassword(e.target.value)}
         />
         {Action === "Register" ? (
-          <button className="border-2 shadow-md py-3 rounded-md font-bold bg-purple-800 text-white">
+          <button
+            className="border-2 shadow-md py-3 rounded-md font-bold bg-purple-800 text-white"
+            onClick={(e) => onRegisterButtonClick(e)}
+          >
             Create New Account
           </button>
         ) : (
-          <button className="border-2 shadow-md py-3 rounded-md font-bold bg-purple-800 text-white">
+          <button
+            className="border-2 shadow-md py-3 rounded-md font-bold bg-purple-800 text-white"
+            onClick={(e) => onloginButtonClick(e)}
+          >
             Continue to Account
           </button>
         )}
